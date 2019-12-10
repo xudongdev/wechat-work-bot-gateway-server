@@ -17,6 +17,7 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
     GraphQLModule.forRoot({
       tracing: true,
       autoSchemaFile: true,
+      introspection: true,
       playground: true
     }),
     JwtModule.register({
