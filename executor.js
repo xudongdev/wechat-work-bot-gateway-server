@@ -6,13 +6,19 @@ process.on("uncaughtException", err => {
   process.exit(1);
 });
 
-process.on("message", ({ code }) => {
-  new NodeVM({
-    sandbox: {},
+process.on("message", ({ code = "", context = {} }) => {
+  const fn = new NodeVM({
     require: false,
     console: "inherit"
   }).run(code);
 
-  // eslint-disable-next-line no-process-exit
-  process.exit(0);
+  if (!(fn instanceof Function)) {
+    throw new Error("module.exports is not a function.");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  (async () => {
+    process.send((await fn(context)) || null);
+    process.exit(0);
+  })();
 });

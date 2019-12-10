@@ -9,14 +9,15 @@ export class PlaygroundResolver {
     return this;
   }
 
-  @Mutation(() => String)
-  public async run(
+  @Mutation(() => GraphQLJSONObject)
+  public async runCode(
     @Args("code")
     code: string,
     @Args({ name: "context", nullable: true, type: () => GraphQLJSONObject })
     context: // eslint-disable-next-line @typescript-eslint/no-explicit-any
     any
-  ): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> {
     return this.sandboxService.run(code, context);
   }
 }
