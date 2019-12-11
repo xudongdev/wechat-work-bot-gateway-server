@@ -4,6 +4,9 @@
   "success_url": "/",
   "addons": ["heroku-postgresql", "heroku-redis"],
   "env": {
+    "APP_URL": {
+      "value": "http://YOURAPPNAME.herokuapp.com"
+    },
     "JWT_SECRET": {
       "value": "secret"
     },
