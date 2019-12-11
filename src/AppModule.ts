@@ -4,7 +4,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { WebhookController } from "./controllers/WebhookController";
+import { GatewayController } from "./controllers/GatewayController";
 import { Bot } from "./models/Bot";
 import { Gateway } from "./models/Gateway";
 import { User } from "./models/User";
@@ -31,7 +31,7 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
     TypeOrmModule.forFeature([Bot, Gateway, User]),
     TypeOrmModule.forRoot()
   ],
-  controllers: [WebhookController],
+  controllers: [GatewayController],
   providers: [BotResolver, GatewayResolver, PlaygroundResolver, SandboxService]
 })
 export class AppModule {}

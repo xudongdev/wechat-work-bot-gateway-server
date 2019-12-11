@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Headers,
+  HttpCode,
   Param,
   Post,
   Query
@@ -13,11 +14,12 @@ import { Gateway } from "../models/Gateway";
 import { SandboxService } from "../services/SandboxService";
 
 @Controller("gateways")
-export class WebhookController {
+export class GatewayController {
   public constructor(private readonly sandboxService: SandboxService) {
     return this;
   }
 
+  @HttpCode(200)
   @Get(":id/webhook")
   public async get(
     @Param("id") id: string,
@@ -29,7 +31,8 @@ export class WebhookController {
     return this.post(id, headers, query);
   }
 
-  @Post(":id")
+  @HttpCode(200)
+  @Post(":id/webhook")
   public async post(
     @Param("id") id: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,18 +42,23 @@ export class WebhookController {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Body() body?: any
   ): Promise<{ status: string }> {
-    const webhook = await Gateway.findOne({ where: { id } });
+    const gateway = await Gateway.findOne({
+      where: { id },
+      relations: ["bots"]
+    });
 
-    const data = await this.sandboxService.run(webhook.code, {
+    const { result, logs } = await this.sandboxService.run(gateway.code, {
       headers,
       query,
       body
     });
 
+    console.log(`[${gateway.id}]`, result, logs);
+
     // eslint-disable-next-line no-restricted-syntax
-    for (const bot of webhook.bots) {
+    for (const bot of gateway.bots) {
       // eslint-disable-next-line no-await-in-loop
-      await axios.post(bot.webhookUrl, data);
+      await axios.post(bot.webhookUrl, result);
     }
 
     return { status: "success" };
