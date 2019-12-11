@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID,ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,7 +6,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
 
@@ -14,9 +14,9 @@ import { Bot } from "./Bot";
 
 @ObjectType()
 @Entity()
-export class Webhook extends BaseEntity {
-  @Field()
-  @PrimaryColumn("uuid")
+export class Gateway extends BaseEntity {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn("uuid")
   public id: string;
 
   @Field()

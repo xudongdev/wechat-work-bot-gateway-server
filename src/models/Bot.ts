@@ -1,21 +1,21 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
 
-import { Webhook } from "./Webhook";
+import { Gateway } from "./Gateway";
 
 @ObjectType()
 @Entity()
 export class Bot extends BaseEntity {
-  @Field()
-  @PrimaryColumn("uuid")
+  @Field(() => ID)
+  @PrimaryGeneratedColumn("uuid")
   public id: string;
 
   @Field()
@@ -34,7 +34,7 @@ export class Bot extends BaseEntity {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @Field(() => [Webhook])
-  @ManyToMany(() => Webhook)
-  public webhooks: Webhook[];
+  @Field(() => [Gateway])
+  @ManyToMany(() => Gateway)
+  public gateways: Gateway[];
 }

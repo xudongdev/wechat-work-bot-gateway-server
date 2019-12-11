@@ -9,16 +9,16 @@ import {
 } from "@nestjs/common";
 import axios from "axios";
 
-import { Webhook } from "../models/Webhook";
+import { Gateway } from "../models/Gateway";
 import { SandboxService } from "../services/SandboxService";
 
-@Controller("webhooks")
+@Controller("gateways")
 export class WebhookController {
   public constructor(private readonly sandboxService: SandboxService) {
     return this;
   }
 
-  @Get(":id")
+  @Get(":id/webhook")
   public async get(
     @Param("id") id: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +39,7 @@ export class WebhookController {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Body() body?: any
   ): Promise<{ status: string }> {
-    const webhook = await Webhook.findOne({ where: { id } });
+    const webhook = await Gateway.findOne({ where: { id } });
 
     const data = await this.sandboxService.run(webhook.code, {
       headers,
