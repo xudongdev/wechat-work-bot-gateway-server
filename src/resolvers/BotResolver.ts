@@ -19,12 +19,12 @@ export class BotResolver {
     })
     id: string
   ): Promise<Bot> {
-    return Bot.findOne({ where: { id } });
+    return Bot.findOne({ where: { id }, relations: ["gateways"] });
   }
 
   @Query(() => [Bot])
   public async bots(): Promise<Bot[]> {
-    return Bot.find();
+    return Bot.find({ relations: ["gateways"] });
   }
 
   @Mutation(() => Bot)
@@ -41,7 +41,7 @@ export class BotResolver {
     id: string,
     @Args("input") input: UpdateBotInput
   ): Promise<Bot> {
-    const bot = await Bot.findOne({ where: { id } });
+    const bot = await Bot.findOne({ where: { id }, relations: ["gateways"] });
 
     Object.keys(input).forEach(key => {
       bot[key] = input[key];
@@ -58,7 +58,7 @@ export class BotResolver {
     })
     id: string
   ): Promise<Bot> {
-    const bot = await Bot.findOne({ where: { id } });
+    const bot = await Bot.findOne({ where: { id }, relations: ["gateways"] });
     return bot.remove();
   }
 }

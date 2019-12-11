@@ -35,6 +35,12 @@ export class Bot extends BaseEntity {
   public updatedAt: Date;
 
   @Field(() => [Gateway])
-  @ManyToMany(() => Gateway)
+  @ManyToMany(
+    () => Gateway,
+    gateway => gateway.bots,
+    {
+      onDelete: "CASCADE"
+    }
+  )
   public gateways: Gateway[];
 }

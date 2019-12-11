@@ -37,6 +37,12 @@ export class Gateway extends BaseEntity {
 
   @Field(() => [Bot])
   @JoinTable()
-  @ManyToMany(() => Bot)
+  @ManyToMany(
+    () => Bot,
+    bot => bot.gateways,
+    {
+      onDelete: "CASCADE"
+    }
+  )
   public bots: Bot[];
 }
