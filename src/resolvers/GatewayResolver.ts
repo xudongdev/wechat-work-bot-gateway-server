@@ -1,5 +1,4 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import _ from "lodash";
 import { ID } from "type-graphql";
 import { In } from "typeorm";
 
@@ -35,7 +34,9 @@ export class GatewayResolver {
   public async createGateway(
     @Args("input") input: CreateGatewayInput
   ): Promise<Gateway> {
-    return Gateway.create(input).save();
+    const gateway = await Gateway.create(input).save();
+    gateway.bots = [];
+    return gateway;
   }
 
   @Mutation(() => Gateway)
@@ -71,11 +72,13 @@ export class GatewayResolver {
       where: { id },
       relations: ["bots"]
     });
-    return gateway.remove();
+    await gateway.remove();
+    gateway.id = id;
+    return gateway;
   }
 
   @Mutation(() => Gateway)
-  public async addGatewayBots(
+  public async setGatewayBots(
     @Args({
       name: "id",
       type: () => ID
@@ -92,33 +95,8 @@ export class GatewayResolver {
       relations: ["bots"]
     });
 
-    const bots = await Bot.find({ where: { id: In(botIds) } });
-
-    gateway.bots = _.uniqBy([...gateway.bots, ...bots], "id");
-
-    return gateway.save();
-  }
-
-  @Mutation(() => Gateway)
-  public async removeGatewayBots(
-    @Args({
-      name: "id",
-      type: () => ID
-    })
-    id: string,
-    @Args({
-      name: "botIds",
-      type: () => [ID]
-    })
-    botIds: string[]
-  ): Promise<Gateway> {
-    const gateway = await Gateway.findOne({
-      where: { id },
-      relations: ["bots"]
-    });
-
-    gateway.bots = gateway.bots.filter(o => botIds.indexOf(o.id) < 0);
-
+    gateway.bots =
+      botIds.length > 0 ? await Bot.find({ where: { id: In(botIds) } }) : [];
     return gateway.save();
   }
 }

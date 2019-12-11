@@ -34,7 +34,7 @@ export class Bot extends BaseEntity {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @Field(() => [Gateway])
+  @Field(() => [Gateway], { nullable: true })
   @ManyToMany(
     () => Gateway,
     gateway => gateway.bots,
@@ -42,5 +42,5 @@ export class Bot extends BaseEntity {
       onDelete: "CASCADE"
     }
   )
-  public gateways: Gateway[];
+  public gateways?: Gateway[];
 }

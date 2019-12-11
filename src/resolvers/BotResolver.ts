@@ -29,7 +29,9 @@ export class BotResolver {
 
   @Mutation(() => Bot)
   public async createBot(@Args("input") input: CreateBotInput): Promise<Bot> {
-    return Bot.create(input).save();
+    const bot = await Bot.create(input).save();
+    bot.gateways = [];
+    return bot;
   }
 
   @Mutation(() => Bot)
@@ -59,6 +61,8 @@ export class BotResolver {
     id: string
   ): Promise<Bot> {
     const bot = await Bot.findOne({ where: { id }, relations: ["gateways"] });
-    return bot.remove();
+    await bot.remove();
+    bot.id = id;
+    return bot;
   }
 }
