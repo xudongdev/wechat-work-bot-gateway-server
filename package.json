@@ -47,7 +47,7 @@
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
     "source-map-support": "^0.5.16",
-    "type-graphql": "^0.17.5",
+    "type-graphql": "^0.17.6",
     "typeorm": "^0.2.21",
     "vm2": "^3.8.4"
   },
