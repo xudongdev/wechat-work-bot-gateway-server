@@ -48,7 +48,7 @@
     "rxjs": "^6.5.3",
     "source-map-support": "^0.5.16",
     "type-graphql": "^0.17.5",
-    "typeorm": "^0.2.21",
+    "typeorm": "^0.2.25",
     "vm2": "^3.8.4"
   },
   "devDependencies": {
